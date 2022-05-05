@@ -52,14 +52,48 @@ const openBrowserContent = (url) => {
 
 const menuTemplate = [
     {
+      label: "Fichier",
+        submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'services' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideOthers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' },
+            { role: 'undo' },
+            { role: 'redo' },
+            { type: 'separator' },
+            { role: 'cut' },
+            { role: 'copy' },
+            { role: 'paste' },
+            { role: 'delete' },
+            { type: 'separator' },
+            { role: 'selectAll' },
+            { role: 'reload' },
+            { role: 'forceReload' },
+            { role: 'toggleDevTools' },
+            { type: 'separator' },
+            { role: 'resetZoom' },
+            { role: 'zoomIn' },
+            { role: 'zoomOut' },
+            { type: 'separator' },
+            { role: 'togglefullscreen' }
+        ]
+    },
+    {
         label: "Actions",
         submenu: [
             {
                 label: "Aller sur Google",
+                accelerator: "ctrl+g",
                 click: () => openBrowserContent("https://www.google.fr")
             },
             {
                 label: "Afficher un message",
+                accelerator: "ctrl+m",
                 click: () =>  {
                     dialog.showMessageBox(mainWindow, {
                         title: "Hello World !",
@@ -74,6 +108,7 @@ const menuTemplate = [
         submenu: [
             {
                 label: "Afficher 'saveDialog'",
+                accelerator: "ctrl+s",
                 click: () => {
                     const file = dialog.showSaveDialogSync(mainWindow, {
                         // blabla vos options
@@ -82,6 +117,7 @@ const menuTemplate = [
             },
             {
                 label: "Afficher 'openDialog'",
+                accelerator: "ctrl+o",
                 click: () => console.log("hello world")
             }
         ],
