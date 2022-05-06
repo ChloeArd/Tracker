@@ -9,6 +9,7 @@ const logSuccess = (message) => {
 }
 
 
+
 contextBridge.exposeInMainWorld('logger', {
     'error': logError,
     'success': logSuccess,

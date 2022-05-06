@@ -6,3 +6,9 @@ document.getElementById('load').addEventListener('click', () => {
         .then(data => textarea.value = data)
     ;
 });
+
+const func = () => {
+    console.log("hello");
+}
+
+window.menu.onOpenDialogClick(func);

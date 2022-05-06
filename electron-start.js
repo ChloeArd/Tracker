@@ -113,12 +113,34 @@ const menuTemplate = [
                     const file = dialog.showSaveDialogSync(mainWindow, {
                         // blabla vos options
                     })
-                }
+                },
+                submenu: [
+                    {
+                        label: "Maintenant",
+                        submenu: [
+                            {
+                                label: "OK",
+                                type: "checkbox",
+                                checked: true
+                            },
+                            {
+                                label: "NOK",
+                                type: "checkbox",
+                                checked: true
+                            }
+                        ]
+                    },
+                    {label: "Demain"},
+                    {label: "Si j'ai envie"},
+                    {label: "On verra !"}
+                ]
             },
             {
                 label: "Afficher 'openDialog'",
                 accelerator: "ctrl+o",
-                click: () => console.log("hello world")
+                click: () => {
+                    mainWindow.webContents.send("open-dialog-clicked");
+                }
             }
         ],
     }
@@ -126,3 +148,17 @@ const menuTemplate = [
 
 const applicationMenu = Menu.buildFromTemplate(menuTemplate);
 Menu.setApplicationMenu(applicationMenu);
+
+// Contextual menu
+const contextualMenuTemplate = [
+    {
+        label: "Menu contextuel 1",
+        click: () => console.log("Menu contextuel 1 clicked")
+    }
+];
+
+const contextualMenu = Menu.buildFromTemplate(contextualMenuTemplate);
+
+
+// Affichage du menu contextuel
+ipcMain.on("show-context-menu", (event) => contextualMenu.popup(mainWindow));
