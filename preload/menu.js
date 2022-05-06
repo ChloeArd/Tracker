@@ -9,3 +9,10 @@ document.addEventListener("contextmenu", (e) => {
     e.preventDefault();
     ipcRenderer.send("show-context-menu");
 });
+
+contextBridge.exposeInMainWorld("notification", {
+    show: (config, callable) => {
+        ipcRenderer.send("show-notification", config);
+        ipcRenderer.once("show-notification-clicked", callable);
+    }
+})

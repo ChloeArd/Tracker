@@ -12,3 +12,13 @@ const func = () => {
 }
 
 window.menu.onOpenDialogClick(func);
+
+document.getElementById("notification").addEventListener("click", () => {
+    const config = {
+        title: "Un titre de notification",
+        body: "Le contenu de la notification",
+        icon: "./assets/images/icon.png"
+    }
+
+    window.notification.show(config, () => console.log("hello"));
+});

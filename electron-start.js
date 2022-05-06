@@ -1,10 +1,11 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, Tray, Notification } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
 const ipcDialog = require('./main/dialog');
 const ipcFile = require('./main/files');
 const ipcLogger = require('./main/logger');
+let trayQuitting = false;
 
 // Create the Browser Window and load the main html entry point.
 let mainWindow = null;
@@ -17,7 +18,8 @@ const makeWindow = () => {
         icon: path.resolve(__dirname + "/assets/icon.png"),
         webPreferences: {
             preload: `${__dirname}/preload.js`
-        }
+        },
+        show: false
     });
 
     mainWindow.webContents.openDevTools();
@@ -31,7 +33,48 @@ app.whenReady().then(() => {
         if (BrowserWindow.getAllWindows().length === 0) {
             makeWindow()
         }
+    });
+
+    // Tray icon
+    mainWindow.on('close', event => {
+        if (!trayQuitting) {
+            event.preventDefault();
+            BrowserWindow.getAllWindows().map(window => window.hide());
+        }
+    });
+
+    const tray = new Tray("./assets/images/icon.png");
+    const contextual = [
+        {
+            label: "Quitter",
+            click: () => {
+                trayQuitting = true;
+                app.quit();
+            }
+        },
+        {
+            label: "Ouvrir",
+            click: () => mainWindow.show()
+        },
+        {type: "separator"}, // Pas beau sous linux
+        {role: "copy"} // Ne sert a rien de le tray, juste pour démonstration
+    ];
+    tray.setContextMenu(Menu.buildFromTemplate(contextual));
+    const notification = new Notification({
+        title: "L'application est prête",
+        body: "L'application a été lancée et est prête pour l'utilisation",
+        icon: "./assets/images/icon.png"
     })
+
+    notification.show();
+    notification.on("click", () => mainWindow.show());
+});
+
+// Affichage d'une notification
+ipcMain.on("show-notification", (event, configuration) => {
+    const notification = new Notification({...configuration});
+    notification.show();
+    notification.on("click", () => event.sender.send("show-notification-clicked"));
 });
 
 // Closing app if all windows are closed BUT MacOs.
